@@ -1,86 +1,58 @@
------------------------------------------------------------
--- General
------------------------------------------------------------
--- Set leader key to space
 vim.g.mapleader = " "
--- Set leader key to space
-vim.g.maplocalleader = " "
 
--- Number of spaces a tab represents
-vim.opt.tabstop = 2
-vim.opt.softtabstop = 2
+vim.opt.encoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
 
--- Use appropriate when using indent command
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 2
+vim.opt.number = true
 
--- Indenting correctly after { etc
-vim.opt.smartindent = true
-
--- Copy indent from current line when starting new line
+vim.opt.title = true
 vim.opt.autoindent = true
-
--- Prevent line wrapping
+vim.opt.smartindent = true
+vim.opt.hlsearch = true
+vim.opt.backup = false
+vim.opt.showcmd = true
+vim.opt.cmdheight = 1
+vim.opt.laststatus = 3
+vim.opt.expandtab = true
+vim.opt.scrolloff = 10
+vim.opt.shell = "fish"
+vim.opt.backupskip = { "/tmp/*", "/private/tmp/*" }
+vim.opt.inccommand = "split"
+vim.opt.ignorecase = true -- Case insensitive searching UNLESS /C or capital in search
+vim.opt.smarttab = true
 vim.opt.breakindent = true
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.wrap = false -- No Wrap lines
+vim.opt.backspace = { "start", "eol", "indent" }
+vim.opt.path:append({ "**" }) -- Finding files - Search down into subfolders
+vim.opt.wildignore:append({ "*/node_modules/*" })
+vim.opt.splitbelow = true -- Put new windows below current
+vim.opt.splitright = true -- Put new windows right of current
+vim.opt.splitkeep = "cursor"
+vim.opt.mouse = ""
 
--- Disable text wrap
-vim.opt.wrap = false
+-- Undercurl
+vim.cmd([[let &t_Cs = "\e[4:3m"]])
+vim.cmd([[let &t_Ce = "\e[4:0m"]])
 
--- Speeds up plugin wait time
-vim.opt.updatetime = 50
+-- Add asterisks in block comments
+vim.opt.formatoptions:append({ "r" })
 
--- Persistant undo file history
-vim.opt.undofile = true
------------------------------------------------------------
--- UI Config
------------------------------------------------------------
--- Enable line numbers
-vim.opt.nu = true
+vim.cmd([[au BufNewFile,BufRead *.astro setf astro]])
+vim.cmd([[au BufNewFile,BufRead Podfile setf ruby]])
 
--- Enable relative line numbers
-vim.opt.rnu = true
+if vim.fn.has("nvim-0.8") == 1 then
+	vim.opt.cmdheight = 0
+end
 
--- Disable showing the mode below the statusline
-vim.opt.showmode = false
-
--- Better completion experience
-vim.opt.completeopt = { "menuone", "noselect" }
-
--- Enable 24-bit color
-vim.opt.termguicolors = true
-
--- Enable the sign column to prevent the screen from jumping
-vim.opt.signcolumn = "yes"
-
--- Enable cursor line highlight
-vim.opt.cursorline = true
-
--- Always keep 8 lines above/below cursor unless at start/end of file
-vim.opt.scrolloff = 8
-
--- Better splitting
-vim.opt.splitbelow = true
-vim.opt.splitright = true
-
--- Faster scrolling
-vim.opt.lazyredraw = true
-
--- Highlight yank
-vim.api.nvim_create_autocmd("textyankpost", {
-	group = vim.api.nvim_create_augroup("highlight_yank", { clear = true }),
-	pattern = "*",
-	desc = "highlight selection on yank",
-	callback = function()
-		vim.highlight.on_yank({ timeout = 200, visual = true })
-	end,
+-- File types
+vim.filetype.add({
+	extension = {
+		mdx = "mdx",
+	},
 })
 
------------------------------------------------------------
--- Search Config
------------------------------------------------------------
--- Enable highlighting search in progress
-vim.opt.incsearch = true
-
--- Ignore case for searches
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+vim.g.lazyvim_prettier_needs_config = true
+vim.g.lazyvim_picker = "telescope"
+vim.g.lazyvim_cmp = "blink.cmp"

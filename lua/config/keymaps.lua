@@ -1,55 +1,79 @@
------------------------------------------------------------
--- Normal Mode
------------------------------------------------------------
--- Disable Space bar since it'll be used as the leader key
-vim.keymap.set("n", "<leader>", "<nop>")
+local discipline = require("craftzdog.discipline")
 
--- Redo remap
-vim.keymap.set("n", "U", "<C-r>")
+discipline.cowboy()
 
--- Swap between split buffers
-vim.keymap.set("n", "<C-Left>", ":wincmd h<CR>")
-vim.keymap.set("n", "<C-Right>", ":wincmd l<CR>")
+local keymap = vim.keymap
+local opts = { noremap = true, silent = true }
 
--- Save and quit current file quicker
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { silent = false })
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { silent = false })
+-- Do things without affecting the registers
+keymap.set("n", "x", '"_x')
+keymap.set("n", "<Leader>p", '"0p')
+keymap.set("n", "<Leader>P", '"0P')
+keymap.set("v", "<Leader>p", '"0p')
+keymap.set("n", "<Leader>c", '"_c')
+keymap.set("n", "<Leader>C", '"_C')
+keymap.set("v", "<Leader>c", '"_c')
+keymap.set("v", "<Leader>C", '"_C')
+keymap.set("n", "<Leader>d", '"_d')
+keymap.set("n", "<Leader>D", '"_D')
+keymap.set("v", "<Leader>d", '"_d')
+keymap.set("v", "<Leader>D", '"_D')
 
--- Little one from Primeagen to mass replace string in a file
-vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]], { silent = false })
+-- Increment/decrement
+keymap.set("n", "+", "<C-a>")
+keymap.set("n", "-", "<C-x>")
 
--- Navigate through buffers
-vim.keymap.set("n", "<S-Right>", ":bnext<CR>", { silent = false })
-vim.keymap.set("n", "<S-Left>", ":bprevious<CR>", { silent = false })
+-- Delete a word backwards
+keymap.set("n", "dw", 'vb"_d')
 
--- Close currently active buffer
-vim.keymap.set("n", "<C-c>", ":bwipeout<CR>", { silent = false })
+-- Select all
+keymap.set("n", "<C-a>", "gg<S-v>G")
 
--- Center buffer when navigating up and down
-vim.keymap.set("n", "<S-Up>", "<C-u>zz")
-vim.keymap.set("n", "<S-Down>", "<C-d>zz")
+-- pass mode normal 
+keymap.set("i", "jk", "<esc>", opts)
 
--- Center buffer when progressing through search results
-vim.keymap.set("n", "n", "nzzzv")
-vim.keymap.set("n", "N", "Nzzzv")
+-- Save with root permission (not working for now)
+--vim.api.nvim_create_user_command('W', 'w !sudo tee > /dev/null %', {})
 
--- Paste without replacing paste with what you are highlighted over
-vim.keymap.set("n", "<leader>p", '"_dP')
+-- Disable continuations
+keymap.set("n", "<Leader>o", "o<Esc>^Da", opts)
+keymap.set("n", "<Leader>O", "O<Esc>^Da", opts)
 
--- Yank to system clipboard
-vim.keymap.set("n", "<leader>y", '"+y')
-vim.keymap.set("v", "<leader>y", '"+y')
-vim.keymap.set("n", "<leader>Y", '"+Y')
+-- Jumplist
+keymap.set("n", "<C-m>", "<C-i>", opts)
 
--- Open buffer to the right
-vim.keymap.set("n", "<leader>v", ":vsplit<CR>")
+-- New tab
+keymap.set("n", "te", ":tabedit")
+keymap.set("n", "<tab>", ":tabnext<Return>", opts)
+keymap.set("n", "<s-tab>", ":tabprev<Return>", opts)
+-- Split window
+keymap.set("n", "ss", ":split<Return>", opts)
+keymap.set("n", "sv", ":vsplit<Return>", opts)
+-- Move window
+keymap.set("n", "sh", "<C-w>h")
+keymap.set("n", "sk", "<C-w>k")
+keymap.set("n", "sj", "<C-w>j")
+keymap.set("n", "sl", "<C-w>l")
 
------------------------------------------------------------
--- Visual Mode
------------------------------------------------------------
--- Disable Space bar since it'll be used as the leader key
-vim.keymap.set("v", "<leader>", "<nop>")
+-- Resize window
+keymap.set('n', '<C-w><left>', '<C-w><')
+keymap.set('n', '<C-w><right>', '<C-w>>')
+keymap.set('n', '<C-w><up>', '<C-w>+')
+keymap.set('n', '<C-w><down>', '<C-w>-')
 
--- Move selection up and down
-vim.keymap.set("v", "<C-Down>", ":m '>+1<CR>gv=gv")
-vim.keymap.set("v", "<C-Up>", ":m '<-2<CR>gv=gv")
+-- Diagnostics
+keymap.set('n', '<C-j>', function()
+  vim.diagnostic.goto_next()
+end, opts)
+
+keymap.set('n', '<leader>r', function()
+  require('craftzdog.hsl').replaceHexWithHSL()
+end)
+
+keymap.set('n', '<leader>i', function()
+  require('craftzdog.lsp').toggleInlayHints()
+end)
+
+vim.api.nvim_create_user_command('ToggleAutoformat', function()
+  require('craftzdog.lsp').toggleAutoformat()
+end, {})
