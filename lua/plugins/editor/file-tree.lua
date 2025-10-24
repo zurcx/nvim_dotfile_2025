@@ -53,10 +53,11 @@ return {
         highlight_git = true,
       },
       filters = {
-        dotfiles = false,
-        git_ignored = false,
-        git_clean = false,
-        no_buffer = false,
+        dotfiles = false,        -- Show hidden files (files starting with .)
+        git_ignored = false,     -- Show git ignored files
+        git_clean = false,       -- Show files not tracked by git
+        no_buffer = false,       -- Show bufferless files
+        custom = {},             -- No custom filters
       },
       git = {
         enable = true,
